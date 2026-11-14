@@ -253,9 +253,131 @@ body {
   outline-offset: 2px;
 }
 
+/* Contact form */
+.contact-form {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+}
+
+.form-note {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: #6b7785;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-field {
+  margin-bottom: 1rem;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field textarea {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  font-size: 1rem;
+  color: #1f2933;
+  background: #ffffff;
+  border: 1px solid #c9d2dc;
+  border-radius: 8px;
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 7rem;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: 2px solid #24405f;
+  outline-offset: 1px;
+  border-color: #24405f;
+}
+
+.form-field [aria-invalid="true"] {
+  border-color: #b42318;
+  background: #fef3f2;
+}
+
+.form-field [aria-invalid="true"]:focus {
+  outline-color: #b42318;
+}
+
+.field-error {
+  margin: 0.3rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #b42318;
+}
+
+.field-error:empty {
+  display: none;
+}
+
+.contact-submit {
+  min-width: 140px;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #24405f;
+  border: 1px solid #24405f;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.contact-submit:hover {
+  background: #1a3049;
+}
+
+.contact-submit:focus-visible {
+  outline: 2px solid #24405f;
+  outline-offset: 2px;
+}
+
+.form-status {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  color: #34502a;
+  background: #eef3ea;
+  border-radius: 8px;
+}
+
+.form-status:empty {
+  display: none;
+}
+
 @media (max-width: 600px) {
   .contact {
     padding: 0 1rem 2.5rem;
+  }
+
+  .contact-form {
+    padding: 1.25rem 1rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .contact-submit {
+    width: 100%;
   }
 
   .contact-links {
