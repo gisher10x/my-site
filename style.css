@@ -76,7 +76,11 @@
   --leading-body: 1.75;
   --leading-tight: 1.2;
 
-  --transition: 0.18s ease;
+  /* Motion */
+  --transition: 0.25s ease-out;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --reveal-duration: 0.6s;   /* keep in sync with DURATION_MS in script.js */
+  --reveal-distance: 16px;
 }
 
 /* =========================================================
@@ -207,6 +211,12 @@ svg {
   object-fit: cover;
   border: 5px solid var(--color-surface);
   box-shadow: 0 0 0 10px var(--color-ring), var(--shadow-lg);
+  transition: transform 0.3s var(--ease-out-soft), box-shadow 0.3s var(--ease-out-soft);
+}
+
+.intro-photo:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 0 12px var(--color-ring), var(--shadow-lg);
 }
 
 .intro-text h1 {
@@ -390,11 +400,13 @@ svg {
   color: var(--color-accent-strong);
   background: var(--color-accent-soft);
   border: 1px solid transparent;
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
 }
 
 .tags li:hover {
   border-color: var(--color-accent);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
 }
 
 .tags-interests {
@@ -484,6 +496,12 @@ svg {
   color: var(--color-on-accent);
   background: var(--color-accent-strong);
   box-shadow: 0 0 0 6px var(--color-accent-soft), var(--shadow-sm);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.step:hover .step-num {
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 6px var(--color-accent-soft), var(--shadow-md);
 }
 
 .step p {
@@ -807,17 +825,48 @@ svg {
   }
 }
 
-/* Respect users who prefer less motion */
+/* =========================================================
+   Scroll reveal
+   The hidden state only applies when script.js has added
+   .js-reveal to <html>, so without JavaScript all content shows.
+   ========================================================= */
+.js-reveal .reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+  transition:
+    opacity var(--reveal-duration) var(--ease-out-soft),
+    transform var(--reveal-duration) var(--ease-out-soft);
+}
+
+.js-reveal .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* =========================================================
+   Respect users who prefer less motion
+   ========================================================= */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  * {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
     transition: none !important;
   }
 
+  .js-reveal .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
   .background-cards .card:hover,
+  .tags li:hover,
+  .step:hover .step-num,
+  .intro-photo:hover,
   .contact-link:hover,
   .contact-submit:hover {
     transform: none;
