@@ -184,7 +184,13 @@
           <p class="field-error" id="contact-message-error"></p>
         </div>
 
+        <input type="hidden" name="_subject" value="הודעה חדשה מהאתר">
+        <div aria-hidden="true" style="position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;">
+          <input type="text" name="_honey" tabindex="-1" autocomplete="off">
+        </div>
+
         <button type="submit" class="contact-submit">שליחה</button>
+        <p class="form-note" style="margin: var(--space-3) 0 0;">הפרטים שתשאירו יישלחו אליי במייל ולא יפורסמו.</p>
         <p class="form-status" id="contact-status" role="status"></p>
       </form>
     </div>

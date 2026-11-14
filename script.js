@@ -79,10 +79,75 @@
       return;
     }
 
+    send();
+  });
+
+  // ---------- Sending through FormSubmit (runs only after validation passes) ----------
+  var ENDPOINT = 'https://formsubmit.co/ajax/gisher10x@gmail.com';
+  var MSG_SUCCESS = 'ההודעה נשלחה, תודה! אחזור אליך בהקדם.';
+  var MSG_ERROR = 'לא הצלחתי לשלוח את ההודעה. אפשר לנסות שוב, או ליצור קשר דרך GitHub או LinkedIn.';
+  var MSG_SENDING = 'שולח...';
+
+  var submitButton = form.querySelector('.contact-submit');
+  var submitLabel = submitButton ? submitButton.textContent : '';
+  var sending = false;
+
+  // The status box is styled as success; an error switches it to the error colours.
+  function setStatus(text, isError) {
+    status.style.color = isError ? 'var(--color-error)' : '';
+    status.style.background = isError ? 'var(--color-error-bg)' : '';
+    status.textContent = text;
+  }
+
+  function succeed() {
     form.reset();
     fields.forEach(clearError);
-    status.textContent = 'הטופס נבדק בהצלחה, אבל שליחת הודעות עדיין לא מחוברת. אפשר ליצור קשר דרך GitHub או LinkedIn.';
-  });
+    setStatus(MSG_SUCCESS, false);
+  }
+
+  function setSending(isSending) {
+    sending = isSending;
+    if (!submitButton) return;
+    submitButton.disabled = isSending;
+    submitButton.textContent = isSending ? MSG_SENDING : submitLabel;
+  }
+
+  function send() {
+    if (sending) return;
+
+    // Spam trap: real visitors never see this field. If it is filled, pretend it worked.
+    var honey = form.elements['_honey'];
+    if (honey && honey.value) {
+      succeed();
+      return;
+    }
+
+    setSending(true);
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+      body: new FormData(form)
+    })
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (data) {
+        // FormSubmit can answer 200 with success "false" (for example before activation).
+        if (data && (data.success === false || data.success === 'false')) {
+          throw new Error('FormSubmit refused');
+        }
+        succeed();
+      })
+      .catch(function () {
+        // Keep what the visitor typed so they can try again.
+        setStatus(MSG_ERROR, true);
+      })
+      .then(function () {
+        setSending(false);
+      });
+  }
 })();
 
 /* =========================================================
