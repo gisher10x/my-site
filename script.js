@@ -86,6 +86,81 @@
 })();
 
 /* =========================================================
+   Theme toggle (separate from the form validation above)
+   A tiny script in <head> applies a stored choice before paint;
+   this block keeps the toggle, aria-pressed and storage in sync.
+   ========================================================= */
+(function () {
+  var STORAGE_KEY = 'theme';
+  var root = document.documentElement;
+  var button = document.querySelector('.theme-toggle');
+  var systemDark = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  var reduceMotion = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  var chosenThisVisit = false; // covers browsers where storage is blocked
+  var fadeTimer;
+
+  function readStored() {
+    try {
+      var value = window.localStorage.getItem(STORAGE_KEY);
+      return value === 'light' || value === 'dark' ? value : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function store(value) {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, value);
+    } catch (e) {
+      // Storage unavailable: the choice still applies for this visit.
+    }
+  }
+
+  function systemTheme() {
+    return systemDark && systemDark.matches ? 'dark' : 'light';
+  }
+
+  function apply(theme) {
+    root.setAttribute('data-theme', theme);
+    if (button) button.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+  }
+
+  // First visit follows the system; later visits use the stored choice.
+  apply(readStored() || systemTheme());
+
+  // Follow system changes until the visitor makes a choice.
+  if (systemDark) {
+    var onSystemChange = function () {
+      if (!chosenThisVisit && !readStored()) apply(systemTheme());
+    };
+    if (systemDark.addEventListener) {
+      systemDark.addEventListener('change', onSystemChange);
+    } else if (systemDark.addListener) {
+      systemDark.addListener(onSystemChange);
+    }
+  }
+
+  if (!button) return;
+  button.hidden = false; // the button only shows when JavaScript runs
+
+  button.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+
+    if (!(reduceMotion && reduceMotion.matches)) {
+      root.classList.add('theme-transition');
+      window.clearTimeout(fadeTimer);
+      fadeTimer = window.setTimeout(function () {
+        root.classList.remove('theme-transition');
+      }, 400);
+    }
+
+    chosenThisVisit = true;
+    apply(next);
+    store(next);
+  });
+})();
+
+/* =========================================================
    Scroll reveal (separate from the form validation above)
    Elements start hidden only when this code runs, so the page
    stays fully visible without JavaScript.
