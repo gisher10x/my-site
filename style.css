@@ -205,7 +205,68 @@ body {
   padding: 0;
 }
 
+/* Contact section */
+.contact {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+
+.contact h2 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.contact-note {
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+}
+
+.contact-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.contact-link {
+  display: inline-block;
+  min-width: 140px;
+  padding: 0.75rem 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  color: #24405f;
+  background: #ffffff;
+  border: 1px solid #e3e7ec;
+  border-radius: 10px;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.contact-link:hover,
+.contact-link:focus-visible {
+  background: #e8eef6;
+  border-color: #a9bbd0;
+}
+
+.contact-link:focus-visible {
+  outline: 2px solid #24405f;
+  outline-offset: 2px;
+}
+
 @media (max-width: 600px) {
+  .contact {
+    padding: 0 1rem 2.5rem;
+  }
+
+  .contact-links {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-link {
+    display: block;
+  }
+
   .selected-work {
     padding: 0 1rem 2.5rem;
   }
